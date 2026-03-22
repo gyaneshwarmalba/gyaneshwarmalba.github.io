@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gyaneshwar Malba | AI Solutions Architect</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #7dd3fc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+
+        header { margin-bottom: 3rem; }
+        header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        header .subtitle {
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        header .bio {
+            color: var(--muted);
+            margin-top: 1rem;
+            max-width: 600px;
+        }
+
+        .section { margin-bottom: 3rem; }
+        .section h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .project {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+        .project:hover { transform: translateY(-2px); }
+        .project h3 { margin-bottom: 0.5rem; }
+        .project h3 a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .project h3 a:hover { color: var(--accent-hover); }
+        .project p { color: var(--muted); font-size: 0.95rem; }
+        .project .tags { margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .project .tag {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+        }
+
+        .links { display: flex; gap: 1.5rem; margin-top: 1.5rem; }
+        .links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .links a:hover { color: var(--accent-hover); }
+
+        footer {
+            color: var(--muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--surface);
+            padding-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gyaneshwar Malba</h1>
+            <div class="subtitle">Lead Software Engineer @ Nike &middot; AI Solutions Architect &middot; 6x Salesforce Certified</div>
+            <p class="bio">
+                Building intelligent enterprise platforms at the intersection of AI, Salesforce, and Cloud.
+                Currently focused on AI-powered Contract Legal Automation using Salesforce, Databricks, and AWS Bedrock.
+            </p>
+            <div class="links">
+                <a href="https://github.com/gyaneshwarmalba">GitHub</a>
+                <a href="https://www.linkedin.com/in/gyaneshwarmalba/">LinkedIn</a>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>Projects</h2>
+
+            <div class="project">
+                <h3><a href="https://github.com/gyaneshwarmalba/ai-legal-contract-analyzer">AI Legal Contract Analyzer</a></h3>
+                <p>RAG pipeline for legal document analysis — automated clause extraction, risk scoring, and compliance checking.</p>
+                <div class="tags">
+                    <span class="tag">LangChain</span>
+                    <span class="tag">AWS Bedrock</span>
+                    <span class="tag">Databricks</span>
+                    <span class="tag">Salesforce</span>
+                    <span class="tag">FAISS</span>
+                </div>
+            </div>
+
+            <div class="project">
+                <h3><a href="https://github.com/gyaneshwarmalba/multi-agent-legal-workflow">Multi-Agent Legal Workflow</a></h3>
+                <p>Multi-agent system orchestrating specialized legal agents for contract review, compliance, and summarization.</p>
+                <div class="tags">
+                    <span class="tag">LangGraph</span>
+                    <span class="tag">CrewAI</span>
+                    <span class="tag">AWS Bedrock</span>
+                    <span class="tag">LangSmith</span>
+                </div>
+            </div>
+
+            <div class="project">
+                <h3><a href="https://github.com/gyaneshwarmalba/salesforce-databricks-connector">Salesforce-Databricks Connector</a></h3>
+                <p>Real-time bidirectional data sync between Salesforce and Databricks via Change Data Capture.</p>
+                <div class="tags">
+                    <span class="tag">Databricks</span>
+                    <span class="tag">Salesforce CDC</span>
+                    <span class="tag">Delta Lake</span>
+                    <span class="tag">PySpark</span>
+                </div>
+            </div>
+
+            <div class="project">
+                <h3><a href="https://github.com/gyaneshwarmalba/ai-governance-dashboard">AI Governance Dashboard</a></h3>
+                <p>Observability platform for monitoring LLM performance, cost, prompt quality, and policy compliance.</p>
+                <div class="tags">
+                    <span class="tag">Streamlit</span>
+                    <span class="tag">OpenTelemetry</span>
+                    <span class="tag">LangSmith</span>
+                    <span class="tag">Databricks</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Certifications</h2>
+            <p>6x Salesforce Certified &middot; Copado &middot; AWS Cloud Practitioner</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Gyaneshwar Malba. Built with purpose.</p>
+        </footer>
+    </div>
+</body>
+</html>
