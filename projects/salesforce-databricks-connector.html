@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce-Databricks Connector | Gyaneshwar Malba</title>
+    <meta name="description" content="Near-real-time sync patterns between Salesforce and Databricks using Change Data Capture, landing zones, and governed Delta Lake tables.">
+    <meta property="og:title" content="Salesforce-Databricks Connector | Gyaneshwar Malba">
+    <meta property="og:description" content="Change Data Capture from Salesforce into governed Databricks tables for analytics and AI.">
+    <meta property="og:url" content="https://gyaneshwarmalba.github.io/projects/salesforce-databricks-connector.html">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container article">
+        <a class="back" href="../index.html">&larr; All projects</a>
+
+        <header>
+            <span class="status">In development</span>
+            <h1>Salesforce-Databricks Connector</h1>
+            <div class="subtitle">Real-time sync into analytics-ready, governed tables</div>
+            <p class="bio">
+                Captures changes in Salesforce, lands them in Databricks, and refines them into governed tables that analytics
+                and AI features can rely on.
+            </p>
+            <div class="links">
+                <a href="https://github.com/gyaneshwarmalba/salesforce-databricks-connector">View on GitHub</a>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>The problem</h2>
+            <p>
+                Salesforce holds valuable operational data, but analytics and AI work needs that data in a lakehouse: current, clean,
+                and governed. Nightly exports go stale, and ad-hoc pulls create inconsistent copies with no lineage.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Architecture</h2>
+            <ol class="flow">
+                <li>Salesforce<span>Change Data Capture events, with Bulk or REST APIs for backfills</span></li>
+                <li>Ingestion service<span>Receives changes and writes them to a landing zone</span></li>
+                <li>Databricks<span>Delta Lake bronze and silver tables apply cleaning, deduplication, and schema checks</span></li>
+                <li>Gold tables and features<span>Governed, analytics-ready data for reporting and AI use cases</span></li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>Key design decisions</h2>
+            <ul>
+                <li><strong>Change Data Capture over polling.</strong> Events keep data fresh without repeatedly querying Salesforce and consuming API limits; bulk APIs are kept for backfills and recovery.</li>
+                <li><strong>Land raw, then refine.</strong> Keeping the raw change stream makes reprocessing and auditing possible when business rules change.</li>
+                <li><strong>Governance built in.</strong> Tables are designed for Unity Catalog permissions and lineage, so downstream AI use is controlled from the start.</li>
+                <li><strong>Designed for reuse.</strong> Gold tables serve both reporting and AI features, avoiding one-off copies for each consumer.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Tech stack</h2>
+            <ul class="tags">
+                <li class="tag">Python</li>
+                <li class="tag">PySpark</li>
+                <li class="tag">Databricks</li>
+                <li class="tag">Delta Lake</li>
+                <li class="tag">Salesforce CDC</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Status</h2>
+            <p class="muted">
+                Architecture and project structure are published on GitHub. The ingestion service and a dry-run demo are in progress.
+            </p>
+        </div>
+
+        <div class="section">
+            <div class="cta">
+                <p>Want to discuss this project, the design trade-offs, or how it could apply to your team?</p>
+                <div class="links">
+                    <a class="button" href="https://www.linkedin.com/in/gyaneshwarmalba/" data-email-user="gyaneshwar0821" data-email-domain="gmail.com" data-email-subject="About your Salesforce-Databricks Connector project">Email me about this project</a>
+                    <a href="https://www.linkedin.com/in/gyaneshwarmalba/">Message on LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; <span data-current-year>2026</span> Gyaneshwar Malba &middot; <a href="../index.html">Home</a></p>
+        </footer>
+    </div>
+    <script src="../site.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Legal Contract Analyzer | Gyaneshwar Malba</title>
+    <meta name="description" content="A governed RAG pipeline that ingests legal contracts, retrieves relevant clauses, and supports human-in-the-loop review with AWS Bedrock, Databricks, and Salesforce.">
+    <meta property="og:title" content="AI Legal Contract Analyzer | Gyaneshwar Malba">
+    <meta property="og:description" content="Governed RAG pipeline for legal contract analysis with human-in-the-loop review.">
+    <meta property="og:url" content="https://gyaneshwarmalba.github.io/projects/ai-legal-contract-analyzer.html">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container article">
+        <a class="back" href="../index.html">&larr; All projects</a>
+
+        <header>
+            <span class="status">In development</span>
+            <h1>AI Legal Contract Analyzer</h1>
+            <div class="subtitle">Governed RAG pipeline for legal documents</div>
+            <p class="bio">
+                Ingests contracts, chunks and embeds them, retrieves the clauses that matter, and passes answers through a governed
+                LLM layer before anything reaches a reviewer.
+            </p>
+            <div class="links">
+                <a href="https://github.com/gyaneshwarmalba/ai-legal-contract-analyzer">View on GitHub</a>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>The problem</h2>
+            <p>
+                Legal teams spend a lot of time reading long agreements to find specific clauses, spot risky language, and check
+                terms against policy. Generic chat tools are a poor fit: answers need to cite the source text, stay inside approved
+                models and data boundaries, and leave the final call to a human reviewer.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Architecture</h2>
+            <ol class="flow">
+                <li>Sources<span>Contract documents from storage or a contract lifecycle system</span></li>
+                <li>Ingest and chunk<span>Split documents into clause-aware chunks with metadata</span></li>
+                <li>Vector store<span>Embed chunks and index them for similarity search</span></li>
+                <li>RAG with AWS Bedrock<span>Retrieve relevant clauses and generate grounded, cited answers</span></li>
+                <li>Review<span>Surface results in Salesforce or a review UI for a human decision</span></li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>Key design decisions</h2>
+            <ul>
+                <li><strong>Human in the loop by default.</strong> The system suggests and cites; a reviewer approves. That keeps accountability with legal staff.</li>
+                <li><strong>Governed model access.</strong> Generation goes through AWS Bedrock so model choice, data residency, and logging follow enterprise controls.</li>
+                <li><strong>Answers grounded in source text.</strong> Every answer links back to the retrieved clauses so reviewers can verify it quickly.</li>
+                <li><strong>Fits existing workflows.</strong> Results are designed to land where legal teams already work (Salesforce) instead of in a separate tool.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Tech stack</h2>
+            <ul class="tags">
+                <li class="tag">Python</li>
+                <li class="tag">LangChain</li>
+                <li class="tag">AWS Bedrock</li>
+                <li class="tag">FAISS</li>
+                <li class="tag">Databricks</li>
+                <li class="tag">Salesforce</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Status</h2>
+            <p class="muted">
+                Architecture and project structure are published on GitHub. The end-to-end pipeline and a runnable demo are in progress.
+            </p>
+        </div>
+
+        <div class="section">
+            <div class="cta">
+                <p>Want to discuss this project, the design trade-offs, or how it could apply to your team?</p>
+                <div class="links">
+                    <a class="button" href="https://www.linkedin.com/in/gyaneshwarmalba/" data-email-user="gyaneshwar0821" data-email-domain="gmail.com" data-email-subject="About your AI Legal Contract Analyzer project">Email me about this project</a>
+                    <a href="https://www.linkedin.com/in/gyaneshwarmalba/">Message on LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; <span data-current-year>2026</span> Gyaneshwar Malba &middot; <a href="../index.html">Home</a></p>
+        </footer>
+    </div>
+    <script src="../site.js"></script>
+</body>
+</html>

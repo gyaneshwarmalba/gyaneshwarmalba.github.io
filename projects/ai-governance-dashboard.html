@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Governance Dashboard | Gyaneshwar Malba</title>
+    <meta name="description" content="Observability and governance for AI workloads: traces, policy checks, cost and latency monitoring, alerts, and human review hooks.">
+    <meta property="og:title" content="AI Governance Dashboard | Gyaneshwar Malba">
+    <meta property="og:description" content="Observability and governance for LLM applications and agents.">
+    <meta property="og:url" content="https://gyaneshwarmalba.github.io/projects/ai-governance-dashboard.html">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container article">
+        <a class="back" href="../index.html">&larr; All projects</a>
+
+        <header>
+            <span class="status">In development</span>
+            <h1>AI Governance Dashboard</h1>
+            <div class="subtitle">Observability and governance for AI systems</div>
+            <p class="bio">
+                One place to see how AI applications and agents behave in practice: what they were asked, what they answered,
+                what it cost, how long it took, and whether it followed policy.
+            </p>
+            <div class="links">
+                <a href="https://github.com/gyaneshwarmalba/ai-governance-dashboard">View on GitHub</a>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>The problem</h2>
+            <p>
+                As teams ship more LLM features, it becomes hard to answer basic questions: Which prompts are failing? What is this
+                costing? Did any response break policy? Without a shared view, governance turns into manual spot checks and quality
+                problems are found by users first.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Architecture</h2>
+            <ol class="flow">
+                <li>Apps and agents<span>LLM applications emit traces for every request</span></li>
+                <li>Telemetry<span>OpenTelemetry and LangSmith capture prompts, responses, latency, and token usage</span></li>
+                <li>Store<span>Telemetry lands in Databricks for history and analysis</span></li>
+                <li>Dashboard UI<span>Streamlit views of quality, cost, latency, and policy results</span></li>
+                <li>Alerts and policies<span>Policy checks flag issues and route them to human review</span></li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>Key design decisions</h2>
+            <ul>
+                <li><strong>Open telemetry standards.</strong> OpenTelemetry keeps the dashboard independent of any one model provider or framework.</li>
+                <li><strong>Cost and quality side by side.</strong> Showing spend next to quality signals makes trade-offs visible when choosing models or prompts.</li>
+                <li><strong>Policies as checks, not documents.</strong> Governance rules run automatically against real traffic instead of living only in a policy wiki.</li>
+                <li><strong>Human review hooks.</strong> Flagged responses go to a person, and their decisions feed back into evaluation.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Tech stack</h2>
+            <ul class="tags">
+                <li class="tag">Python</li>
+                <li class="tag">Streamlit</li>
+                <li class="tag">OpenTelemetry</li>
+                <li class="tag">LangSmith</li>
+                <li class="tag">Databricks</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Status</h2>
+            <p class="muted">
+                Architecture and project structure are published on GitHub. The telemetry pipeline and dashboard UI are in progress.
+            </p>
+        </div>
+
+        <div class="section">
+            <div class="cta">
+                <p>Want to discuss this project, the design trade-offs, or how it could apply to your team?</p>
+                <div class="links">
+                    <a class="button" href="https://www.linkedin.com/in/gyaneshwarmalba/" data-email-user="gyaneshwar0821" data-email-domain="gmail.com" data-email-subject="About your AI Governance Dashboard project">Email me about this project</a>
+                    <a href="https://www.linkedin.com/in/gyaneshwarmalba/">Message on LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; <span data-current-year>2026</span> Gyaneshwar Malba &middot; <a href="../index.html">Home</a></p>
+        </footer>
+    </div>
+    <script src="../site.js"></script>
+</body>
+</html>

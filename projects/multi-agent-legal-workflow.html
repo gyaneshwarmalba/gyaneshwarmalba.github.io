@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Legal Workflow | Gyaneshwar Malba</title>
+    <meta name="description" content="A LangGraph multi-agent system for legal workflows with routing, specialist agents, tool use, and human-in-the-loop checkpoints.">
+    <meta property="og:title" content="Multi-Agent Legal Workflow | Gyaneshwar Malba">
+    <meta property="og:description" content="LangGraph orchestration of specialist legal agents with human review checkpoints.">
+    <meta property="og:url" content="https://gyaneshwarmalba.github.io/projects/multi-agent-legal-workflow.html">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container article">
+        <a class="back" href="../index.html">&larr; All projects</a>
+
+        <header>
+            <span class="status">In development</span>
+            <h1>Multi-Agent Legal Workflow</h1>
+            <div class="subtitle">LangGraph orchestration for legal processes</div>
+            <p class="bio">
+                An orchestrator routes each request to specialist agents for contract review, compliance checks, and summarization,
+                with human review checkpoints before anything is finalized.
+            </p>
+            <div class="links">
+                <a href="https://github.com/gyaneshwarmalba/multi-agent-legal-workflow">View on GitHub</a>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>The problem</h2>
+            <p>
+                Legal requests are rarely one step. A single contract question can involve reading the agreement, checking it against
+                policy, looking up related records, and summarizing the outcome for a stakeholder. One general-purpose prompt handles
+                this poorly; a workflow of focused agents with clear hand-offs and review points handles it far better.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Architecture</h2>
+            <ol class="flow">
+                <li>User or trigger<span>A request from a person or an event in a business system</span></li>
+                <li>Orchestrator graph<span>LangGraph routes the request and tracks state across steps</span></li>
+                <li>Specialist agents<span>Review, compliance, and summarization agents, each with a narrow job</span></li>
+                <li>Tools and APIs<span>Agents call approved tools such as document search and record lookups</span></li>
+                <li>Review<span>A human checkpoint approves, edits, or sends work back</span></li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>Key design decisions</h2>
+            <ul>
+                <li><strong>Explicit graph over free-form agents.</strong> LangGraph makes routing, retries, and state visible and testable instead of hidden in prompts.</li>
+                <li><strong>Narrow specialist agents.</strong> Smaller, focused agents are easier to evaluate and improve than one agent that does everything.</li>
+                <li><strong>Human checkpoints at decision points.</strong> The workflow pauses for review wherever the output carries legal or business risk.</li>
+                <li><strong>Traceability.</strong> Each step is traced (LangSmith) so reviewers and engineers can see how a result was produced.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Tech stack</h2>
+            <ul class="tags">
+                <li class="tag">Python</li>
+                <li class="tag">LangGraph</li>
+                <li class="tag">CrewAI</li>
+                <li class="tag">AWS Bedrock</li>
+                <li class="tag">LangSmith</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Status</h2>
+            <p class="muted">
+                Architecture and project structure are published on GitHub. The orchestration graph and a runnable demo are in progress.
+            </p>
+        </div>
+
+        <div class="section">
+            <div class="cta">
+                <p>Want to discuss this project, the design trade-offs, or how it could apply to your team?</p>
+                <div class="links">
+                    <a class="button" href="https://www.linkedin.com/in/gyaneshwarmalba/" data-email-user="gyaneshwar0821" data-email-domain="gmail.com" data-email-subject="About your Multi-Agent Legal Workflow project">Email me about this project</a>
+                    <a href="https://www.linkedin.com/in/gyaneshwarmalba/">Message on LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; <span data-current-year>2026</span> Gyaneshwar Malba &middot; <a href="../index.html">Home</a></p>
+        </footer>
+    </div>
+    <script src="../site.js"></script>
+</body>
+</html>
