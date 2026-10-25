@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Agent Legal Workflow | Gyaneshwar Malba</title>
-    <meta name="description" content="A LangGraph multi-agent system for legal workflows with routing, specialist agents, tool use, and human-in-the-loop checkpoints.">
+    <meta name="description" content="A LangGraph supervisor routing contracts through review, compliance, and summary agents, with durable human-approval interrupts, retries, and validated LLM output.">
     <meta property="og:title" content="Multi-Agent Legal Workflow | Gyaneshwar Malba">
-    <meta property="og:description" content="LangGraph orchestration of specialist legal agents with human review checkpoints.">
+    <meta property="og:description" content="LangGraph multi-agent contract review with checkpointed human approval.">
     <meta property="og:url" content="https://gyaneshwarmalba.github.io/projects/multi-agent-legal-workflow.html">
     <meta property="og:type" content="article">
     <link rel="stylesheet" href="../styles.css">
@@ -16,46 +16,62 @@
         <a class="back" href="../index.html">&larr; All projects</a>
 
         <header>
-            <span class="status">In development</span>
+            <span class="status live">Working demo</span>
             <h1>Multi-Agent Legal Workflow</h1>
-            <div class="subtitle">LangGraph orchestration for legal processes</div>
+            <div class="subtitle">Specialist agents with a deterministic supervisor and a human approval gate</div>
             <p class="bio">
-                An orchestrator routes each request to specialist agents for contract review, compliance checks, and summarization,
-                with human review checkpoints before anything is finalized.
+                A LangGraph supervisor sends each contract through review, compliance, and summary agents, then pauses for a human
+                when risk is high. State is checkpointed, so a paused review can be approved from a different process hours later.
             </p>
             <div class="links">
                 <a href="https://github.com/gyaneshwarmalba/multi-agent-legal-workflow">View on GitHub</a>
             </div>
+            <a class="ci-badge" href="https://github.com/gyaneshwarmalba/multi-agent-legal-workflow/actions/workflows/ci.yml"><img src="https://github.com/gyaneshwarmalba/multi-agent-legal-workflow/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
         </header>
 
         <div class="section">
             <h2>The problem</h2>
             <p>
                 Legal requests are rarely one step. A single contract question can involve reading the agreement, checking it against
-                policy, looking up related records, and summarizing the outcome for a stakeholder. One general-purpose prompt handles
-                this poorly; a workflow of focused agents with clear hand-offs and review points handles it far better.
+                policy, and summarizing the outcome for a stakeholder. One general-purpose prompt handles this poorly; a workflow of
+                focused agents with clear hand-offs and review points handles it far better.
             </p>
         </div>
 
         <div class="section">
             <h2>Architecture</h2>
             <ol class="flow">
-                <li>User or trigger<span>A request from a person or an event in a business system</span></li>
-                <li>Orchestrator graph<span>LangGraph routes the request and tracks state across steps</span></li>
-                <li>Specialist agents<span>Review, compliance, and summarization agents, each with a narrow job</span></li>
-                <li>Tools and APIs<span>Agents call approved tools such as document search and record lookups</span></li>
-                <li>Review<span>A human checkpoint approves, edits, or sends work back</span></li>
+                <li>Intake<span>Parse the contract into numbered clauses; reject text with no clause structure</span></li>
+                <li>Supervisor<span>A pure routing function of the current state picks the next agent, so every path is reproducible</span></li>
+                <li>Review agent<span>Parties, effective date, term, renewal, obligations, and notice periods, each tied to a section number</span></li>
+                <li>Compliance agent<span>Versioned policy checks: liability cap, mutual damages exclusion, no unilateral termination, data use, 72-hour breach notice, payment terms, governing law</span></li>
+                <li>Summary agent<span>Executive summary built only from upstream outputs</span></li>
+                <li>Human approval<span>LangGraph <code>interrupt()</code> pauses high-risk runs; <code>Command(resume=...)</code> continues them with the reviewer's decision</span></li>
             </ol>
         </div>
 
         <div class="section">
             <h2>Key design decisions</h2>
             <ul>
-                <li><strong>Explicit graph over free-form agents.</strong> LangGraph makes routing, retries, and state visible and testable instead of hidden in prompts.</li>
-                <li><strong>Narrow specialist agents.</strong> Smaller, focused agents are easier to evaluate and improve than one agent that does everything.</li>
-                <li><strong>Human checkpoints at decision points.</strong> The workflow pauses for review wherever the output carries legal or business risk.</li>
-                <li><strong>Traceability.</strong> Each step is traced (LangSmith) so reviewers and engineers can see how a result was produced.</li>
+                <li><strong>A deterministic supervisor, not LLM routing.</strong> Legal workflows need reproducible paths and a clear audit trail. LLMs are used where they help: extraction and prose.</li>
+                <li><strong>Compliance verdicts are rules; explanations can be generated.</strong> The approval gate depends on pass or fail, so that result must be repeatable for the same contract and policy version.</li>
+                <li><strong>Validate model output and fall back.</strong> LLM extraction must return JSON with the expected keys; otherwise the rule-based extractor is used and the fallback is recorded.</li>
+                <li><strong>Escalate instead of crashing.</strong> Transient Bedrock errors are retried with backoff. Any other agent error is recorded and the run is routed to a human.</li>
+                <li><strong>One framework.</strong> LangGraph alone covers routing, interrupts, retries, and checkpointing, so CrewAI was dropped from the original plan.</li>
             </ul>
+        </div>
+
+        <div class="section">
+            <h2>Run it</h2>
+            <pre><code>git clone https://github.com/gyaneshwarmalba/multi-agent-legal-workflow.git
+cd multi-agent-legal-workflow
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app/main.py
+python -m app.cli run data/sample_contracts/acme_master_services_agreement.txt
+python -m app.cli resume &lt;thread_id&gt; --reject --reviewer alice
+pytest</code></pre>
+            <p class="muted">On the synthetic samples, the one-sided MSA fails 8 checks and pauses for approval; the NDA and SaaS agreement are auto-approved.</p>
         </div>
 
         <div class="section">
@@ -63,16 +79,18 @@
             <ul class="tags">
                 <li class="tag">Python</li>
                 <li class="tag">LangGraph</li>
-                <li class="tag">CrewAI</li>
                 <li class="tag">AWS Bedrock</li>
-                <li class="tag">LangSmith</li>
+                <li class="tag">SQLite checkpoints</li>
+                <li class="tag">Streamlit</li>
             </ul>
         </div>
 
         <div class="section">
             <h2>Status</h2>
             <p class="muted">
-                Architecture and project structure are published on GitHub. The orchestration graph and a runnable demo are in progress.
+                Working demo with 17 automated tests running in CI, including pausing and resuming a workflow across separate processes.
+                The rule-based agents run offline. Bedrock mode is switched on through configuration and has not yet been validated against
+                a live account.
             </p>
         </div>
 
