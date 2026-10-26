@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Legal Contract Analyzer | Gyaneshwar Malba</title>
-    <meta name="description" content="A governed RAG pipeline that ingests legal contracts, retrieves relevant clauses, and supports human-in-the-loop review with AWS Bedrock, Databricks, and Salesforce.">
+    <meta name="description" content="Governed RAG over legal contracts: clause-aware retrieval, cited answers enforced in code, rule-based risk scoring, and a human review gate before publishing to Salesforce.">
     <meta property="og:title" content="AI Legal Contract Analyzer | Gyaneshwar Malba">
-    <meta property="og:description" content="Governed RAG pipeline for legal contract analysis with human-in-the-loop review.">
+    <meta property="og:description" content="Governed RAG for legal contracts with enforced citations, risk scoring, and human-in-the-loop review.">
     <meta property="og:url" content="https://gyaneshwarmalba.github.io/projects/ai-legal-contract-analyzer.html">
     <meta property="og:type" content="article">
     <link rel="stylesheet" href="../styles.css">
@@ -16,16 +16,17 @@
         <a class="back" href="../index.html">&larr; All projects</a>
 
         <header>
-            <span class="status">In development</span>
+            <span class="status live">Working demo</span>
             <h1>AI Legal Contract Analyzer</h1>
             <div class="subtitle">Governed RAG pipeline for legal documents</div>
             <p class="bio">
-                Ingests contracts, chunks and embeds them, retrieves the clauses that matter, and passes answers through a governed
-                LLM layer before anything reaches a reviewer.
+                Splits contracts into their real clauses, answers questions with section citations that are checked in code, scores
+                risk against versioned rules, and publishes nothing until a reviewer approves it.
             </p>
             <div class="links">
                 <a href="https://github.com/gyaneshwarmalba/ai-legal-contract-analyzer">View on GitHub</a>
             </div>
+            <a class="ci-badge" href="https://github.com/gyaneshwarmalba/ai-legal-contract-analyzer/actions/workflows/ci.yml"><img src="https://github.com/gyaneshwarmalba/ai-legal-contract-analyzer/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
         </header>
 
         <div class="section">
@@ -40,32 +41,47 @@
         <div class="section">
             <h2>Architecture</h2>
             <ol class="flow">
-                <li>Sources<span>Contract documents from storage or a contract lifecycle system</span></li>
-                <li>Ingest and chunk<span>Split documents into clause-aware chunks with metadata</span></li>
-                <li>Vector store<span>Embed chunks and index them for similarity search</span></li>
-                <li>RAG with AWS Bedrock<span>Retrieve relevant clauses and generate grounded, cited answers</span></li>
-                <li>Review<span>Surface results in Salesforce or a review UI for a human decision</span></li>
+                <li>Clause-aware ingestion<span>Splits on the contract's own headings (<code>1. TERM</code>, <code>Section 4</code>, <code>ARTICLE III</code>), so every chunk is a real clause and every citation is a section number</span></li>
+                <li>Embed and index<span>Local hashing embedder offline, or Amazon Titan embeddings; in-memory or FAISS index</span></li>
+                <li>Retrieve and generate<span>Top-k clauses go to an extractive generator offline, or Claude on AWS Bedrock with a citation-only prompt</span></li>
+                <li>Citation check<span>Answers that cite nothing, or cite a clause that wasn't retrieved, are marked ungrounded and sent to review</span></li>
+                <li>Risk scoring<span>Versioned JSON rules (liability caps, one-sided indemnity, auto-renewal, data use, and more), each with evidence and a recommended fallback position</span></li>
+                <li>Human review, then publish<span>Only approved reviews are written to local JSON or a Salesforce custom object</span></li>
             </ol>
         </div>
 
         <div class="section">
             <h2>Key design decisions</h2>
             <ul>
-                <li><strong>Human in the loop by default.</strong> The system suggests and cites; a reviewer approves. That keeps accountability with legal staff.</li>
-                <li><strong>Governed model access.</strong> Generation goes through AWS Bedrock so model choice, data residency, and logging follow enterprise controls.</li>
-                <li><strong>Answers grounded in source text.</strong> Every answer links back to the retrieved clauses so reviewers can verify it quickly.</li>
-                <li><strong>Fits existing workflows.</strong> Results are designed to land where legal teams already work (Salesforce) instead of in a separate tool.</li>
+                <li><strong>Citations are enforced in code, not just requested in the prompt.</strong> The pipeline verifies every <code>[n]</code> against the retrieved clauses and routes failures to a person.</li>
+                <li><strong>An extractive baseline that can't hallucinate.</strong> Offline mode only quotes retrieved text, which makes it a control when comparing a hosted model against the same retrieval results.</li>
+                <li><strong>Rules decide risk; models explain it.</strong> Deterministic rules give repeatable, auditable scores, and every report records the policy version it was scored against.</li>
+                <li><strong>No path to Salesforce without a reviewer.</strong> The sink is only called from the approval decision.</li>
+                <li><strong>Fits existing workflows.</strong> Approved results land where legal teams already work, in Salesforce, rather than in a separate tool.</li>
             </ul>
+        </div>
+
+        <div class="section">
+            <h2>Run it</h2>
+            <pre><code>git clone https://github.com/gyaneshwarmalba/ai-legal-contract-analyzer.git
+cd ai-legal-contract-analyzer
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload       # API docs at localhost:8000/docs
+streamlit run ui/streamlit_app.py   # reviewer UI
+pytest</code></pre>
+            <p class="muted">No API keys needed. Three synthetic contracts (an MSA, an NDA, and a SaaS agreement) are loaded automatically.</p>
         </div>
 
         <div class="section">
             <h2>Tech stack</h2>
             <ul class="tags">
                 <li class="tag">Python</li>
-                <li class="tag">LangChain</li>
+                <li class="tag">FastAPI</li>
+                <li class="tag">Streamlit</li>
                 <li class="tag">AWS Bedrock</li>
+                <li class="tag">Titan Embeddings</li>
                 <li class="tag">FAISS</li>
-                <li class="tag">Databricks</li>
                 <li class="tag">Salesforce</li>
             </ul>
         </div>
@@ -73,7 +89,9 @@
         <div class="section">
             <h2>Status</h2>
             <p class="muted">
-                Architecture and project structure are published on GitHub. The end-to-end pipeline and a runnable demo are in progress.
+                Working demo with 25 automated tests running in CI. The offline path runs end to end. The Bedrock, FAISS, and Salesforce
+                adapters are switched on through configuration and have not yet been validated against live accounts. Known limits:
+                the offline embedder is lexical, indexes are rebuilt at startup, and the risk rules are tuned to the sample contracts.
             </p>
         </div>
 

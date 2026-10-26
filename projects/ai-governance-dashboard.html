@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Governance Dashboard | Gyaneshwar Malba</title>
-    <meta name="description" content="Observability and governance for AI workloads: traces, policy checks, cost and latency monitoring, alerts, and human review hooks.">
+    <meta name="description" content="A governance gateway for LLM calls: attribution, budgets, PII and injection guardrails, pricing, OpenTelemetry tracing, and a tamper-evident audit log, with a Streamlit dashboard.">
     <meta property="og:title" content="AI Governance Dashboard | Gyaneshwar Malba">
-    <meta property="og:description" content="Observability and governance for LLM applications and agents.">
+    <meta property="og:description" content="LLM governance gateway with budgets, guardrails, OpenTelemetry tracing, and a hash-chained audit log.">
     <meta property="og:url" content="https://gyaneshwarmalba.github.io/projects/ai-governance-dashboard.html">
     <meta property="og:type" content="article">
     <link rel="stylesheet" href="../styles.css">
@@ -16,63 +16,82 @@
         <a class="back" href="../index.html">&larr; All projects</a>
 
         <header>
-            <span class="status">In development</span>
+            <span class="status live">Working demo</span>
             <h1>AI Governance Dashboard</h1>
-            <div class="subtitle">Observability and governance for AI systems</div>
+            <div class="subtitle">Enforce, observe, and audit every LLM call</div>
             <p class="bio">
-                One place to see how AI applications and agents behave in practice: what they were asked, what they answered,
-                what it cost, how long it took, and whether it followed policy.
+                A gateway that every LLM call passes through, handling attribution, budgets, guardrails, pricing, tracing, and audit,
+                plus a dashboard for the people accountable for AI spend and risk.
             </p>
             <div class="links">
                 <a href="https://github.com/gyaneshwarmalba/ai-governance-dashboard">View on GitHub</a>
             </div>
+            <a class="ci-badge" href="https://github.com/gyaneshwarmalba/ai-governance-dashboard/actions/workflows/ci.yml"><img src="https://github.com/gyaneshwarmalba/ai-governance-dashboard/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
         </header>
 
         <div class="section">
             <h2>The problem</h2>
             <p>
-                As teams ship more LLM features, it becomes hard to answer basic questions: Which prompts are failing? What is this
-                costing? Did any response break policy? Without a shared view, governance turns into manual spot checks and quality
-                problems are found by users first.
+                Once several teams use LLMs, the same questions come up: who is spending what, which model is right for each workload,
+                whether sensitive data is reaching the model, and whether you can prove what happened afterwards. Dashboards built from
+                logs answer some of this after the fact, but controls like redaction and budget stops have to happen before the call.
             </p>
         </div>
 
         <div class="section">
             <h2>Architecture</h2>
             <ol class="flow">
-                <li>Apps and agents<span>LLM applications emit traces for every request</span></li>
-                <li>Telemetry<span>OpenTelemetry and LangSmith capture prompts, responses, latency, and token usage</span></li>
-                <li>Store<span>Telemetry lands in Databricks for history and analysis</span></li>
-                <li>Dashboard UI<span>Streamlit views of quality, cost, latency, and policy results</span></li>
-                <li>Alerts and policies<span>Policy checks flag issues and route them to human review</span></li>
+                <li>Attribution<span>Calls must name a registered team and a model on the approved price list</span></li>
+                <li>Budget check<span>Month-to-date spend per team; alerts at 80% and 100%, optional hard stop</span></li>
+                <li>Input guardrails<span>Redact emails, phone numbers, SSNs, and Luhn-valid card numbers; block prompt injection and policy-blocked topics</span></li>
+                <li>Provider<span>AWS Bedrock, or a seeded simulator for offline demos</span></li>
+                <li>Output guardrails and pricing<span>Redact personal data in responses; cost from a versioned price table</span></li>
+                <li>Trace and audit<span>An OpenTelemetry span per call with GenAI attributes, plus an entry in a SHA-256 hash-chained audit log</span></li>
             </ol>
         </div>
 
         <div class="section">
             <h2>Key design decisions</h2>
             <ul>
-                <li><strong>Open telemetry standards.</strong> OpenTelemetry keeps the dashboard independent of any one model provider or framework.</li>
-                <li><strong>Cost and quality side by side.</strong> Showing spend next to quality signals makes trade-offs visible when choosing models or prompts.</li>
-                <li><strong>Policies as checks, not documents.</strong> Governance rules run automatically against real traffic instead of living only in a policy wiki.</li>
-                <li><strong>Human review hooks.</strong> Flagged responses go to a person, and their decisions feed back into evaluation.</li>
+                <li><strong>A gateway, not log scraping.</strong> Enforcement and observability come from the same code path, so dashboard numbers always match the decisions that were made.</li>
+                <li><strong>OpenTelemetry as the contract.</strong> Spans follow the GenAI semantic conventions and can be exported over OTLP to any backend. The local SQLite exporter only exists to make the dashboard self-contained.</li>
+                <li><strong>Tamper-evident audit.</strong> Editing or deleting any audit row is detected, and the first broken entry reported. Prompts are stored as a hash plus a redacted preview, never in clear.</li>
+                <li><strong>Policy as data.</strong> Pricing, budgets, thresholds, and guardrail actions live in one JSON file, and every span records the policy version it was evaluated against.</li>
+                <li><strong>Decision support, not just charts.</strong> Model comparisons show cost per 1,000 calls next to latency and errors, and prompt-template views show whether v2 should replace v1.</li>
             </ul>
+        </div>
+
+        <div class="section">
+            <h2>Run it</h2>
+            <pre><code>git clone https://github.com/gyaneshwarmalba/ai-governance-dashboard.git
+cd ai-governance-dashboard
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+python -m app.cli simulate        # 30 days of governed traffic
+python -m app.cli verify-audit
+streamlit run app/dashboard.py
+pytest</code></pre>
+            <p class="muted">The simulator sends about 1,500 calls through the real gateway, including PII, injection attempts, blocked topics, provider errors, and a team that runs over budget.</p>
         </div>
 
         <div class="section">
             <h2>Tech stack</h2>
             <ul class="tags">
                 <li class="tag">Python</li>
-                <li class="tag">Streamlit</li>
                 <li class="tag">OpenTelemetry</li>
-                <li class="tag">LangSmith</li>
-                <li class="tag">Databricks</li>
+                <li class="tag">AWS Bedrock</li>
+                <li class="tag">SQLite</li>
+                <li class="tag">pandas</li>
+                <li class="tag">Streamlit</li>
             </ul>
         </div>
 
         <div class="section">
             <h2>Status</h2>
             <p class="muted">
-                Architecture and project structure are published on GitHub. The telemetry pipeline and dashboard UI are in progress.
+                Working demo with 22 automated tests running in CI. The gateway, guardrails, budgets, audit chain, and dashboard run offline.
+                Bedrock and OTLP export are switched on through configuration and have not yet been validated against live accounts.
+                Guardrails are regex and heuristic detectors meant as a first layer; a dedicated DLP or safety classifier can be added behind the same interface.
             </p>
         </div>
 

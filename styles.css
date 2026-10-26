@@ -6,6 +6,7 @@
     --accent: #38bdf8;
     --accent-hover: #7dd3fc;
     --warn: #fbbf24;
+    --ok: #4ade80;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -77,6 +78,10 @@ header .bio {
     font-weight: 500;
     margin-bottom: 0.75rem;
 }
+.status.live {
+    background: rgba(74, 222, 128, 0.12);
+    color: var(--ok);
+}
 
 .links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.5rem; }
 .links a { font-weight: 500; }
@@ -118,6 +123,23 @@ header .bio {
     font-weight: 600;
 }
 .flow li span { display: block; color: var(--muted); font-size: 0.9rem; }
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    background: var(--surface);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+}
+pre {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    line-height: 1.5;
+}
+pre code { background: none; padding: 0; font-size: 0.85rem; }
+.ci-badge { display: block; margin-top: 1rem; }
 
 .cta {
     background: var(--surface);
