@@ -227,6 +227,42 @@ pre code { background: none; padding: 0; font-size: 0.85rem; }
 .timeline .org { display: block; color: var(--text); font-size: 0.9rem; }
 .timeline .what { display: block; color: var(--muted); font-size: 0.85rem; margin-top: 0.15rem; }
 
+.email-button { margin-top: 1.25rem; }
+.sidebar-block { margin-bottom: 3rem; }
+.sidebar-block h2 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.sidebar-block p { font-size: 0.95rem; }
+.sidebar-block p + p { margin-top: 0.5rem; }
+
+@media (min-width: 1100px) {
+    .container.home { max-width: 1240px; }
+    .home .layout {
+        display: grid;
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 4rem;
+        align-items: start;
+    }
+    .home .sidebar {
+        position: sticky;
+        top: 3rem;
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+    }
+    .home header { margin-bottom: 2rem; }
+    .home .identity { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .home header h1 { font-size: 2rem; }
+    .home header .subtitle { font-size: 1rem; }
+    .home .links { gap: 1rem; margin-top: 1.25rem; }
+    .home .sidebar-block { margin-bottom: 0; padding-top: 1.5rem; border-top: 1px solid var(--surface); }
+    .home main { padding-top: 0.5rem; }
+}
+
 footer {
     color: var(--muted);
     font-size: 0.85rem;

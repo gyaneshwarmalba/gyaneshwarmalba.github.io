@@ -12,7 +12,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container home">
+        <div class="layout">
+        <aside class="sidebar">
         <header>
             <div class="identity">
                 <img class="headshot" src="assets/headshot.jpg" alt="Gyaneshwar Malba" width="112" height="112">
@@ -29,11 +31,19 @@
             <div class="links">
                 <a href="https://github.com/gyaneshwarmalba">GitHub</a>
                 <a href="https://www.linkedin.com/in/gyaneshwarmalba/">LinkedIn</a>
-                <a href="#contact" data-email-user="gyaneshwar0821" data-email-domain="gmail.com">Email</a>
                 <a href="assets/Gyaneshwar_Malba_Resume.pdf">Resume (PDF)</a>
             </div>
+            <a class="button email-button" href="#contact" data-email-user="gyaneshwar0821" data-email-domain="gmail.com" data-email-subject="Hello from your portfolio">Email me</a>
         </header>
 
+        <div class="sidebar-block">
+            <h2>Certifications &amp; Community</h2>
+            <p>6x Salesforce Certified &middot; Copado &middot; AWS Cloud Practitioner</p>
+            <p class="muted-line">Salesforce Trailblazer Mentor (2020) &middot; Trailhead Ranger, 101,700+ points &middot; <a href="https://www.salesforce.com/trailblazer/gyanm">Trailblazer profile</a></p>
+        </div>
+        </aside>
+
+        <main>
         <div class="section" id="career">
             <h2>Career at a Glance</h2>
 
@@ -158,12 +168,6 @@
             </div>
         </div>
 
-        <div class="section">
-            <h2>Certifications &amp; Community</h2>
-            <p>6x Salesforce Certified &middot; Copado &middot; AWS Cloud Practitioner</p>
-            <p class="muted-line">Salesforce Trailblazer Mentor (2020) &middot; Trailhead Ranger, 101,700+ points &middot; <a href="https://www.salesforce.com/trailblazer/gyanm">Trailblazer profile</a></p>
-        </div>
-
         <div class="section" id="contact">
             <h2>Contact</h2>
             <div class="cta">
@@ -179,6 +183,8 @@
         <footer>
             <p>&copy; <span data-current-year>2026</span> Gyaneshwar Malba. Built with purpose.</p>
         </footer>
+        </main>
+        </div>
     </div>
     <script src="site.js"></script>
 </body>
